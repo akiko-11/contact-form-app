@@ -16,6 +16,7 @@ class Tag extends Model
 
     public function contacts(): BelongsToMany
     {
-        return $this->belongsToMany(Contact::class);
+        return $this->belongsToMany(Contact::class)
+            ->withTimestamps();
     }
 }
