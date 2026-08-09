@@ -8,6 +8,9 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [ContactController::class, 'index'])
     ->name('contact.index');
 
+Route::post('/contacts/confirm', [ContactController::class, 'confirm'])
+    ->name('contact.confirm');
+
 Route::middleware('auth')->group(function () {
     Route::get('/admin', [AdminController::class, 'index']);
 
