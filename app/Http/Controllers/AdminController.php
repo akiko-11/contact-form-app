@@ -44,4 +44,20 @@ class AdminController extends Controller
 
         return view('admin.index', compact('contacts', 'categories'));
     }
+
+    // お問い合わせ詳細ページ表示
+    public function show(Contact $contact)
+    {
+        $contact->load(['category', 'tags']);
+
+        return view('admin.show', compact('contact'));
+    }
+
+    // お問い合わせ削除
+    public function destroy(Contact $contact)
+    {
+        $contact->delete();
+
+        return redirect('/admin');
+    }
 }
