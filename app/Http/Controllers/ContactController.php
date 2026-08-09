@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreContactRequest;
 use App\Models\Category;
+use App\Models\Contact;
 use App\Models\Tag;
 
 class ContactController extends Controller
@@ -31,8 +32,26 @@ class ContactController extends Controller
         return view('contact.confirm', compact('validated', 'category', 'tags'));
     }
 
+    // お問い合わせ送信
     public function store(StoreContactRequest $request)
     {
-        // 次のIssueで実際の登録処理を実装
+        $validated = $request->validated();
+
+        // contactsテーブルに存在しないタグIDを登録データから分離
+        $tagIds = $validated['tag_ids'] ?? [];
+        unset($validated['tag_ids']);
+
+        $contact = Contact::create($validated);
+
+        // 選択したタグを中間テーブルに関連付け
+        $contact->tags()->sync($tagIds);
+
+        return redirect()->route('contact.thanks');
+    }
+
+    // サンクスページ表示
+    public function thanks()
+    {
+        return view('contact.thanks');
     }
 }
