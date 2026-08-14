@@ -2,8 +2,10 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Throwable;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class Handler extends ExceptionHandler
 {
@@ -23,8 +25,17 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (NotFoundHttpException $e, Request $request) {
+            if (
+                $request->is('api/v1/contacts/*')
+                && $e->getPrevious() instanceof ModelNotFoundException
+            ) {
+                // お問い合わせAPIで、ルートモデルバインディングにより
+                // Contactが見つからなかった場合、日本語のJSONを404で返却
+                return response()->json([
+                    'error' => 'お問い合わせが見つかりませんでした。',
+                ], 404);
+            }
         });
     }
 }
