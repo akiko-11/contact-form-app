@@ -10,9 +10,12 @@
 
 * お問い合わせの一覧表示
 * 名前・メールアドレス・性別・カテゴリー・日付による検索
+* 検索条件を反映したお問い合わせデータのCSVエクスポート
 * お問い合わせ詳細の確認
 * お問い合わせの削除
 * タグの登録・編集・更新・削除
+
+また、認証不要の公開APIを通して、お問い合わせの一覧取得・詳細取得・新規作成・更新・削除をJSON形式で行えます。
 
 ## ER図
 
@@ -253,12 +256,13 @@ platform: 'linux/amd64'
 | PHP          | 8.5.7         |
 | Laravel      | 10.50.2       |
 | MySQL        | 8.4.10        |
-| Vite         | フロントエンド開発環境   |
+| Vite         | 5.4.21 / フロントエンド開発環境 |
 | Tailwind CSS | 3.4.19        |
-| Alpine.js    | フロントエンド処理     |
+| Alpine.js    | 3.15.12 / フロントエンド処理 |
 | Docker       | コンテナ環境        |
 | Laravel Sail | Docker開発環境の操作 |
 | phpMyAdmin   | データベース管理      |
+| Postman      | 公開APIの動作確認     |
 
 ## エンドポイント一覧
 
@@ -288,6 +292,7 @@ platform: 'linux/amd64'
 | メソッド   | パス                          | 概要               |
 | ------ | --------------------------- | ---------------- |
 | GET    | `/admin`                    | お問い合わせ一覧・検索画面を表示 |
+| GET    | `/contacts/export`            | 検索条件を反映したお問い合わせCSVを出力 |
 | GET    | `/admin/contacts/{contact}` | お問い合わせ詳細を表示      |
 | DELETE | `/admin/contacts/{contact}` | お問い合わせを削除        |
 | POST   | `/admin/tags`               | タグを登録            |
@@ -297,7 +302,15 @@ platform: 'linux/amd64'
 
 ## APIエンドポイント一覧
 
-公開APIは応用要件のため、現時点では実装していません。
+以下の公開APIは認証不要で利用できます。
+
+| メソッド | パス                         | 概要                                     | 認証 |
+| -------- | ---------------------------- | ---------------------------------------- | ---- |
+| GET      | `/api/v1/contacts`           | お問い合わせ一覧を取得・検索・ページネーション | 不要 |
+| GET      | `/api/v1/contacts/{contact}` | お問い合わせ詳細を取得                   | 不要 |
+| POST     | `/api/v1/contacts`           | お問い合わせを新規作成                   | 不要 |
+| PUT      | `/api/v1/contacts/{contact}` | お問い合わせを更新                       | 不要 |
+| DELETE   | `/api/v1/contacts/{contact}` | お問い合わせを削除                       | 不要 |
 
 ## テスト
 
@@ -330,8 +343,8 @@ platform: 'linux/amd64'
 ### テスト結果
 
 ```text
-Tests: 2 deprecated, 38 passed (147 assertions)
-Coverage: 62.2%
+Tests: 2 deprecated, 71 passed (373 assertions)
+Coverage: 80.1%
 ```
 
 PHP 8.5による既知の非推奨警告がありますが、すべてのテストとアサーションは正常に完了しています。
