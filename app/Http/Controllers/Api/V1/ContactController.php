@@ -17,38 +17,14 @@ class ContactController extends Controller
     /**
      * お問い合わせ一覧取得
      */
-    public function index(IndexContactRequest $request): AnonymousResourceCollection
-    {
+    public function index(
+        IndexContactRequest $request
+    ): AnonymousResourceCollection {
         $validated = $request->validated();
 
-        $contacts = Contact::with(['category', 'tags']);
-
-        // 名前（部分一致）・メール（部分一致）で絞り込み
-        if (! empty($validated['keyword'])) {
-            $contacts->where(function ($query) use ($validated) {
-                $query->where('first_name', 'like', '%'.$validated['keyword'].'%')
-                    ->orWhere('last_name', 'like', '%'.$validated['keyword'].'%')
-                    ->orWhere('email', 'like', '%'.$validated['keyword'].'%');
-            });
-        }
-
-        // 性別で絞り込み
-        if (! empty($validated['gender'])) {
-            $contacts->where('gender', $validated['gender']);
-        }
-
-        // カテゴリで絞り込み
-        if (! empty($validated['category_id'])) {
-            $contacts->where('category_id', $validated['category_id']);
-        }
-
-        // 日付で絞り込み
-        if (! empty($validated['date'])) {
-            $contacts->whereDate('created_at', $validated['date']);
-        }
-
-        // 最新のレコードから20件ずつ表示
-        $contacts = $contacts
+        // 共通の検索条件を適用し、最新のレコードから表示
+        $contacts = Contact::with(['category', 'tags'])
+            ->filter($validated)
             ->latest()
             ->paginate($validated['per_page'] ?? 20);
 
