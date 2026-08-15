@@ -13,38 +13,18 @@ class AdminController extends Controller
     {
         $validated = $request->validated();
 
-        $contacts = Contact::with(['category', 'tags']);
+        // 共通の検索条件を適用し、7件ずつ表示
+        $contacts = Contact::with(['category', 'tags'])
+            ->filter($validated)
+            ->paginate(7);
 
-        // 名前（部分一致）・メール（部分一致）で絞り込み
-        if (! empty($validated['keyword'])) {
-            $contacts->where(function ($query) use ($validated) {
-                $query->where('first_name', 'like', '%'.$validated['keyword'].'%')
-                    ->orWhere('last_name', 'like', '%'.$validated['keyword'].'%')
-                    ->orWhere('email', 'like', '%'.$validated['keyword'].'%');
-            });
-        }
-
-        // 性別で絞り込み
-        if (! empty($validated['gender'])) {
-            $contacts->where('gender', $validated['gender']);
-        }
-
-        // カテゴリで絞り込み
-        if (! empty($validated['category_id'])) {
-            $contacts->where('category_id', $validated['category_id']);
-        }
-
-        // 日付で絞り込み
-        if (! empty($validated['date'])) {
-            $contacts->whereDate('created_at', $validated['date']);
-        }
-
-        // 7件ずつ表示
-        $contacts = $contacts->paginate(7);
         $categories = Category::all();
         $tags = Tag::all();
 
-        return view('admin.index', compact('contacts', 'categories', 'tags'));
+        return view(
+            'admin.index',
+            compact('contacts', 'categories', 'tags')
+        );
     }
 
     // お問い合わせ詳細ページ表示
