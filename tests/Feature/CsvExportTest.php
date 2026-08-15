@@ -45,7 +45,7 @@ class CsvExportTest extends TestCase
             'category_id' => $category->id,
             'first_name' => '佐藤',
             'last_name' => '花子',
-            'email' => 'saito@example.com',
+            'email' => 'sato@example.com',
         ]);
 
         // Act
@@ -66,7 +66,7 @@ class CsvExportTest extends TestCase
 
         // CSVに検索対象に一致しないデータが含まれていないか確認
         $this->assertStringNotContainsString(
-            'saito@example.com',
+            'sato@example.com',
             $csvContent
         );
     }

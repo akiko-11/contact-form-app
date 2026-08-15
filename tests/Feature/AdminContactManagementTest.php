@@ -30,7 +30,7 @@ class AdminContactManagementTest extends TestCase
             'category_id' => $category->id,
             'first_name' => '佐藤',
             'last_name' => '花子',
-            'email' => 'saito@example.com',
+            'email' => 'sato@example.com',
         ]);
 
         // Act
@@ -40,7 +40,7 @@ class AdminContactManagementTest extends TestCase
         $response->assertStatus(200);
         $response->assertViewIs('admin.index');
         $response->assertSee('yamada@example.com');
-        $response->assertDontSee('saito@example.com');
+        $response->assertDontSee('sato@example.com');
     }
 
     // 指定した性別のお問い合わせだけが表示される
