@@ -361,7 +361,7 @@ platform: 'linux/amd64'
 
 ```text
 Tests: 2 deprecated, 71 passed (373 assertions)
-Coverage: 80.1%
+Coverage: 79.8%
 ```
 
 PHP 8.5による既知の非推奨警告がありますが、すべてのテストとアサーションは正常に完了しています。
