@@ -21,50 +21,67 @@
 
 ```mermaid
 erDiagram
-    CATEGORIES ||--o{ CONTACTS : "has many"
-    CONTACTS ||--o{ CONTACT_TAG : "has"
-    TAGS ||--o{ CONTACT_TAG : "has"
+    categories ||--o{ contacts : "has many"
+    contacts ||--o{ contact_tag : "has"
+    tags ||--o{ contact_tag : "has"
 
-    USERS {
-        bigint id PK
-        string name
-        string email UK
-        string password
+    users {
+        bigint_unsigned id PK
+        varchar(255) name
+        varchar(255) email UK
+        timestamp email_verified_at "nullable"
+        varchar(255) password
+        varchar(100) remember_token "nullable"
+        timestamp created_at
+        timestamp updated_at
     }
 
-    CATEGORIES {
-        bigint id PK
-        string content
+    categories {
+        bigint_unsigned id PK
+        varchar(255) content
+        timestamp created_at
+        timestamp updated_at
     }
 
-    CONTACTS {
-        bigint id PK
-        bigint category_id FK
-        string first_name
-        string last_name
+    contacts {
+        bigint_unsigned id PK
+        bigint_unsigned category_id FK
+        varchar(255) first_name
+        varchar(255) last_name
         tinyint gender
-        string email
-        string tel
-        string address
-        string building
-        string detail
+        varchar(255) email
+        varchar(11) tel
+        varchar(255) address
+        varchar(255) building "nullable"
+        varchar(120) detail
+        timestamp created_at
+        timestamp updated_at
     }
 
-    TAGS {
-        bigint id PK
-        string name UK
+    tags {
+        bigint_unsigned id PK
+        varchar(50) name UK
+        timestamp created_at
+        timestamp updated_at
     }
 
-    CONTACT_TAG {
-        bigint contact_id PK, FK
-        bigint tag_id PK, FK
+    contact_tag {
+        bigint_unsigned id PK
+        bigint_unsigned contact_id FK
+        bigint_unsigned tag_id FK
+        timestamp created_at
+        timestamp updated_at
     }
 ```
 
 * 1つのカテゴリーには、複数のお問い合わせが紐づきます。
 * 1つのお問い合わせは、1つのカテゴリーに属します。
 * お問い合わせとタグは、`contact_tag`中間テーブルを介した多対多の関係です。
-* `users`テーブルは管理画面へのログイン認証に使用します。
+* `contacts.category_id`には、`categories.id`を参照する外部キーとON DELETE CASCADEを設定しています。
+* `contact_tag.contact_id`には、`contacts.id`を参照する外部キーとON DELETE CASCADEを設定しています。
+* `contact_tag.tag_id`には、`tags.id`を参照する外部キーとON DELETE CASCADEを設定しています。
+* `contact_tag`テーブルでは、`id`を主キーとし、`contact_id`と`tag_id`の組み合わせにUNIQUE制約を設定しています。
+* `users`テーブルは、管理画面へのログイン認証に使用します。
 
 ## 環境構築
 
