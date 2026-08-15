@@ -23,6 +23,7 @@ class IndexContactRequestTest extends TestCase
             'gender' => 1,
             'category_id' => $category->id,
             'date' => '2026-08-15',
+            'page' => 2,
             'per_page' => 20,
         ];
 
@@ -77,6 +78,9 @@ class IndexContactRequestTest extends TestCase
 
             // 日付にdate型以外が設定された場合
             ['data' => ['date' => 'invalid-date'], 'field' => 'date'],
+
+            // ページ番号が0の場合
+            ['data' => ['page' => 0], 'field' => 'page'],
 
             // 1ページあたりの件数が0の場合
             ['data' => ['per_page' => 0], 'field' => 'per_page'],
